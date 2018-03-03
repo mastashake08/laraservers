@@ -18,6 +18,8 @@ class CreateKeysTable extends Migration
             $table->integer('user_id')->unsigned();
             $table->foreign('user_id')->references('id')->on('users');
             $table->longText('key');
+            $table->string('server_id');
+            $table->string('key_id');
             $table->timestamps();
         });
     }
