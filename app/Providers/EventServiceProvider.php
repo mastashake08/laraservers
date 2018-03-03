@@ -13,9 +13,37 @@ class EventServiceProvider extends ServiceProvider
      * @var array
      */
     protected $listen = [
-        'App\Events\Event' => [
-            'App\Listeners\EventListener',
+        'App\Events\ServerCreated' => [
+            'App\Listeners\ServerCreatedListener',
         ],
+        'App\Events\ServerDestroyed' => [
+            'App\Listeners\ServerDestroyedListener',
+        ],
+        'App\Events\ServerCreated' => [
+            'App\Listeners\ServerCreatedListener',
+        ],
+        'App\Events\EmailAddressCreated' => [
+            'App\Listeners\EmailAddressCreatedListener',
+        ],
+        'App\Events\EmailAddressDestroyed' => [
+            'App\Listeners\EmailAddressDestroyedListener',
+        ],
+        'App\Events\CertCreated' => [
+            'App\Listeners\CertCreatedListener',
+        ],
+        'App\Events\KeyCreated' => [
+            'App\Listeners\KeyCreatedListener',
+        ],
+        'App\Events\KeyDestroyed' => [
+            'App\Listeners\KeyDestroyedListener',
+        ],
+        'App\Events\DomainCreated' => [
+            'App\Listeners\DomainCreatedListener',
+        ],
+        'App\Events\DomainDestroyed' => [
+            'App\Listeners\DomainDestroyedListener',
+        ],
+
     ];
 
     /**
