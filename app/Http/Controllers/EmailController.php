@@ -3,17 +3,24 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-
+use App\Email;
+use GuzzleHttp\Client;
 class EmailController extends Controller
 {
+   private $client;
+
+   public function __construct(){
+     $this->client = new Client();
+   }
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
         //
+        return response()->json($request->user()->emails);
     }
 
     /**
@@ -35,6 +42,22 @@ class EmailController extends Controller
     public function store(Request $request)
     {
         //
+        $request->validate([
+            'email' => 'required',
+            'password' => 'required',
+        ]);
+        $url = 'https://box.jyroneparkeremail.space/admin/mail/users/add';
+        $result = $this->client->post($url,['auth' => [env('MAIL_API_USERNAME'),env('MAIL_API_PASSWORD')], [
+            'json' => [
+                'email' => $request->email,
+                'password' => $request->password
+                    ]
+                ]);
+
+            $email = $request->user()->emails()->create([
+              'email' => $request->email
+            ]);
+            return response()->json($email);
     }
 
     /**
@@ -46,6 +69,7 @@ class EmailController extends Controller
     public function show($id)
     {
         //
+        return response()->json(Email::findOrFail($id));
     }
 
     /**
@@ -69,6 +93,7 @@ class EmailController extends Controller
     public function update(Request $request, $id)
     {
         //
+
     }
 
     /**
@@ -80,5 +105,14 @@ class EmailController extends Controller
     public function destroy($id)
     {
         //
+        $url = 'https://box.jyroneparkeremail.space/admin/mail/users/remove';
+        $result = $this->client->post($url,['auth' => [env('MAIL_API_USERNAME'),env('MAIL_API_PASSWORD')], [
+            'json' => [
+                'email' => $request->email
+                    ]
+                ]);
+            return response()->json([
+              'success' => Email::delete($id)
+            ]);
     }
 }
