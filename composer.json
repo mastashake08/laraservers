@@ -7,6 +7,7 @@
     "require": {
         "php": ">=7.1.3",
         "fideloper/proxy": "~4.0",
+        "karazieiev/namecheap-php-sdk": "^0.2.0",
         "laravel/cashier": "~7.0",
         "laravel/framework": "5.6.*",
         "laravel/passport": "^5.0",
@@ -60,4 +61,7 @@
     },
     "minimum-stability": "dev",
     "prefer-stable": true
+
+
+
 }

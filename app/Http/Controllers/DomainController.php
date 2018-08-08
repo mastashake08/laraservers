@@ -113,4 +113,70 @@ class DomainController extends Controller
           'success' => $domain->delete()
         ]);
     }
+
+    public function checkDomain(Request $request){
+      try
+        {
+        	$config = new \Namecheap\Config();
+        	$config->apiUser(env('NAMECHEAP_USERNAME'))
+        		->apiKey(env('NAMECHEAP_API_KEY'))
+        		->clientIp(request()->server('SERVER_ADDR'))
+        		->sandbox(true);
+        	$command = \Namecheap\Api::factory($config, 'domains.check');
+          $command->domainList($request->domain)->dispatch();
+        	if($command->isAvailable($request->domain)){
+            return response()->json([
+              'status' => 'available'
+            ]);
+          }
+          else{
+            return response()->json([
+              'status' => 'unavailable'
+            ]);
+          }
+        } catch (\Exception $e) {
+        	return response()->json($e->getMessage());
+        }
+    }
+
+    public function buy(Request $request){
+
+      try
+      {
+        $config = new \Namecheap\Config();
+        $config->apiUser(env('NAMECHEAP_USERNAME'))
+          ->apiKey(env('NAMECHEAP_API_KEY'))
+          ->clientIp(request()->server('SERVER_ADDR'))
+          ->sandbox(true);
+      	$command = \Namecheap\Api::factory($config, 'domains.create');
+      	$command->setParams(array(
+      		'DomainName' => $request->domain,
+      		'RegistrantFirstName'	=> $request->user()->first_name,
+      		'RegistrantLastName'	=> $request->user()->last_name,
+      	))->dispatch();
+        return response()->json($command);
+      } catch (\Exception $e) {
+      	return response()->json($e->getMessage());
+      }
+    }
+
+    public function renew(Request $request){
+      try
+      {
+        $config = new \Namecheap\Config();
+        $config->apiUser(env('NAMECHEAP_USERNAME'))
+          ->apiKey(env('NAMECHEAP_API_KEY'))
+          ->clientIp(request()->server('SERVER_ADDR'))
+          ->sandbox(true);
+      	$command = \Namecheap\Api::factory($config, 'domains.renew');
+      	$command->setParams(array(
+      		'DomainName' => $request->domain,
+      		'Years' => 1
+      	))->dispatch();
+        return response()->json($command);
+      } catch (\Exception $e) {
+      	return response()->json($e->getMessage());
+      }
+
+    }
 }
