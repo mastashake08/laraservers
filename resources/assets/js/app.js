@@ -21,6 +21,7 @@ Vue.component('servers', require('./components/ServersComponent.vue'));
 Vue.component('billing', require('./components/BillingComponent.vue'));
 Vue.component('keys', require('./components/KeyComponent.vue'));
 Vue.component('authentication', require('./components/AuthenticationComponent.vue'));
+Vue.component('domains',require('./components/DomainComponent.vue'));
 Vue.component(
     'passport-clients',
     require('./components/passport/Clients.vue')

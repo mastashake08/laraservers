@@ -17,4 +17,6 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::get('check-domain','DomainController@checkDomain');
+Route::post('check-domain','DomainController@checkDomain');
+Route::get('check-prices','DomainController@checkPrice');
+Route::middleware('auth:api')->post('buy','DomainController@buy');
