@@ -48306,6 +48306,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   mounted: function mounted() {
@@ -48319,11 +48320,14 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
   methods: {
     updateInfo: function updateInfo() {
+      var that = this;
       axios.post('/api/update-billing', { card: this.card }).then(function (data) {
+        that.last4 = data.data;
         alert('Updated Info Successfully!');
       });
     }
-  }
+  },
+  props: ['last4']
 });
 
 /***/ }),
@@ -48343,6 +48347,8 @@ var render = function() {
           ]),
           _vm._v(" "),
           _c("div", { staticClass: "card-body" }, [
+            _c("h3", [_vm._v("Current card ending in: " + _vm._s(_vm.last4))]),
+            _vm._v(" "),
             _c("div", { staticClass: "form-group" }, [
               _c("input", {
                 directives: [

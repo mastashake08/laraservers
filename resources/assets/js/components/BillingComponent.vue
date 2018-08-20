@@ -6,6 +6,7 @@
                     <div class="card-header">Billing Information</div>
 
                     <div class="card-body">
+                      <h3>Current card ending in: {{last4}}</h3>
                         <div class="form-group">
                           <input class="form-control" v-model="card.number" placeholder="Cardnumber">
                         </div>
@@ -53,10 +54,13 @@
         },
         methods:{
           updateInfo: function(){
+            var that = this;
             axios.post('/api/update-billing',{card:this.card}).then(data =>{
+              that.last4 = data.data;
               alert('Updated Info Successfully!');
             })
           }
-        }
+        },
+        props: ['last4']
     }
 </script>

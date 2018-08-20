@@ -33,10 +33,10 @@ Route::middleware('auth:api')->post('/update-billing',function(Request $request)
   )
 ));
 if($request->user()->subscribed('main')){
-  $request->user()->updateCard($stripeToken);
+  $request->user()->updateCard($stripeToken->id);
 }
 else{
   $request->user()->newSubscription('main', env('STRIPE_FREE_ID'))->create($stripeToken->id);
 }
-  return response()->json(true);
+  return response()->json($request->user()->card_last_four);
 });

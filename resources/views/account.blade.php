@@ -1,9 +1,5 @@
 @extends('layouts.app')
 
 @section('content')
-<billing></billing>
-<br>
-<keys></keys>
-<br>
-<authentication></authentication>
+<billing last4="{{Auth::user()->card_last_four}}"></billing>
 @endsection
