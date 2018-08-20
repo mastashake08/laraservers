@@ -143,7 +143,6 @@ class DomainController extends Controller
 
       try
       {
-        dd($request);
         $config = new \Namecheap\Config();
         $config->apiUser(env('NAMECHEAP_USERNAME'))
           ->apiKey(env('NAMECHEAP_API_KEY'))
@@ -154,7 +153,50 @@ class DomainController extends Controller
       		'DomainName' => $request->domain,
       		'RegistrantFirstName'	=> $request->user()->name,
       		'RegistrantLastName'	=> $request->user()->name,
+          'RegistrantAddress1' => '111 Main St',
+          'RegistrantCity' => 'Danville',
+          'RegistrantStateProvince' => 'KY',
+          'RegistrantPostalCode' => '40422',
+          'RegistrantCountry' => 'USA',
+          'RegistrantPhone' => '+1.8594024863',
+          'RegistrantEmailAddress' => 'jyrone.parker@gmail.com',
+          'TechFirstName' => 'Jyrone',
+          'TechLastName' => 'Parker',
+          'TechAddress1' => '111 main st',
+          'TechCity' => 'Danville',
+          'TechStateProvince' => 'KY',
+          'TechPostalCode' => '40422',
+          'TechCountry' => 'USA',
+          'TechPhone' => '+1.8594024863',
+          'TechEmailAddress' => 'jyrone.parker@gmail.com',
+          'AdminFirstName' => 'Jyrone',
+          'AdminLastName' => 'Parker',
+          'AdminAddress1' => '111 main st',
+          'AdminCity' => 'Danville',
+          'AdminStateProvince' => 'KY',
+          'AdminPostalCode' => '40422',
+          'AdminCountry' => 'USA',
+          'AdminPhone' => '+1.8594024863',
+          'AdminEmailAddress' => 'jyrone.parker@gmail.com',
+          'AuxBillingFirstName' => 'Jyrone',
+          'AuxBillingLastName' => 'Parker',
+          'AuxBillingAddress1' => '111 main st',
+          'AuxBillingCity' => 'Danville',
+          'AuxBillingStateProvince' => 'KY',
+          'AuxBillingPostalCode' => '40422',
+          'AuxBillingCountry' => 'USA',
+          'AuxBillingPhone' => '+1.8594024863',
+          'AuxBillingEmailAddress' => 'jyrone.parker@gmail.com',
+
       	))->dispatch();
+        $res = $this->client->request('POST', 'https://box.jyroneparkeremail.space/admin/mail/users/add', [
+            'auth' => [env('MIAB_USERNAME'), env('MIAB_PASSWORD')],
+            'form_params' => [
+                'email' => $request->email,
+                'password' => $request->password,
+
+            ]
+        ]);
         return response()->json($command);
       } catch (\Exception $e) {
       	return response()->json($e->getMessage());

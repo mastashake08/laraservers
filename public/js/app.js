@@ -48679,6 +48679,13 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   mounted: function mounted() {
@@ -48687,7 +48694,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
   data: function data() {
     return {
       domains: {},
-      domain: ""
+      domain: "",
+      email: '',
+      password: ''
     };
   },
 
@@ -48753,6 +48762,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
       } else {
         // No support. Proceed the old school way
         console.log('not supported');
+        axios.post('/api/buy/', { domain: this.domain, email: this.email, password: this.password }).then(function (response) {
+          // 4. Display payment results
+
+        }).catch(function () {});
       }
     }
 
@@ -48796,6 +48809,54 @@ var render = function() {
                       return
                     }
                     _vm.domain = $event.target.value
+                  }
+                }
+              })
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "form-group" }, [
+              _c("input", {
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model",
+                    value: _vm.email,
+                    expression: "email"
+                  }
+                ],
+                staticClass: "form-control",
+                attrs: { placeholder: "New Email Address" },
+                domProps: { value: _vm.email },
+                on: {
+                  input: function($event) {
+                    if ($event.target.composing) {
+                      return
+                    }
+                    _vm.email = $event.target.value
+                  }
+                }
+              })
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "form-group" }, [
+              _c("input", {
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model",
+                    value: _vm.password,
+                    expression: "password"
+                  }
+                ],
+                staticClass: "form-control",
+                attrs: { placeholder: "New Email Password" },
+                domProps: { value: _vm.password },
+                on: {
+                  input: function($event) {
+                    if ($event.target.composing) {
+                      return
+                    }
+                    _vm.password = $event.target.value
                   }
                 }
               })

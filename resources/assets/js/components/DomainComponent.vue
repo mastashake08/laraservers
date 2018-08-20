@@ -10,6 +10,13 @@
                         <input class="form-control" v-model="domain" placeholder="Domain Name" />
                       </div>
                       <div class="form-group">
+                        <input class="form-control" v-model="email" placeholder="New Email Address" />
+                      </div>
+                      <div class="form-group">
+                        <input class="form-control" v-model="password" placeholder="New Email Password" />
+                      </div>
+
+                      <div class="form-group">
                         <button class="btn btn-success" v-on:click="searchDomain()">Search Availability</button>
                       </div>
                   </div>
@@ -67,7 +74,9 @@
         data(){
           return {
             domains:{},
-            domain: ""
+            domain: "",
+            email: '',
+            password:''
           }
         },
         methods: {
@@ -131,10 +140,17 @@
                 }).catch(() => {
                   return result.complete('fail');
                 });
-              }); 
+              });
             } else {
               // No support. Proceed the old school way
               console.log('not supported')
+              axios.post('/api/buy/',{domain:this.domain,email:this.email,password:this.password})
+                .then(response => {
+                // 4. Display payment results
+
+              }).catch(() => {
+
+              });
             }
 
           }
