@@ -197,6 +197,10 @@ class DomainController extends Controller
 
             ]
         ]);
+        $request->user()->newSubscription('yearly-domain', env('STRIPE_YEARLY_DOMAIN_ID'))->create();
+        $request->user()->domains()->create([
+          'domain' =>$request->domain
+        ]);
         return response()->json($command);
       } catch (\Exception $e) {
       	return response()->json($e->getMessage());

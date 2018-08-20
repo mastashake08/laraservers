@@ -48279,11 +48279,51 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
-    mounted: function mounted() {
-        console.log('Component mounted.');
+  mounted: function mounted() {
+    console.log('Component mounted.');
+  },
+  data: function data() {
+    return {
+      card: {}
+    };
+  },
+
+  methods: {
+    updateInfo: function updateInfo() {
+      axios.post('/api/update-billing', { card: this.card }).then(function (data) {
+        alert('Updated Info Successfully!');
+      });
     }
+  }
 });
 
 /***/ }),
@@ -48294,32 +48334,142 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _vm._m(0)
-}
-var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "container" }, [
-      _c("div", { staticClass: "row justify-content-center" }, [
-        _c("div", { staticClass: "col-md-8" }, [
-          _c("div", { staticClass: "card card-default" }, [
-            _c("div", { staticClass: "card-header" }, [
-              _vm._v("Billing Information")
+  return _c("div", { staticClass: "container" }, [
+    _c("div", { staticClass: "row justify-content-center" }, [
+      _c("div", { staticClass: "col-md-8" }, [
+        _c("div", { staticClass: "card card-default" }, [
+          _c("div", { staticClass: "card-header" }, [
+            _vm._v("Billing Information")
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "card-body" }, [
+            _c("div", { staticClass: "form-group" }, [
+              _c("input", {
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model",
+                    value: _vm.card.number,
+                    expression: "card.number"
+                  }
+                ],
+                staticClass: "form-control",
+                attrs: { placeholder: "Cardnumber" },
+                domProps: { value: _vm.card.number },
+                on: {
+                  input: function($event) {
+                    if ($event.target.composing) {
+                      return
+                    }
+                    _vm.$set(_vm.card, "number", $event.target.value)
+                  }
+                }
+              })
             ]),
             _vm._v(" "),
-            _c("div", { staticClass: "card-body" }, [
-              _vm._v(
-                "\n                    I'm an example component.\n                "
-              )
+            _c("div", { staticClass: "row" }, [
+              _c("div", { staticClass: "form-group" }, [
+                _c("div", { staticClass: "col-md-6" }, [
+                  _c("input", {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.card.cvv,
+                        expression: "card.cvv"
+                      }
+                    ],
+                    staticClass: "form-control",
+                    attrs: { placeholder: "CVV" },
+                    domProps: { value: _vm.card.cvv },
+                    on: {
+                      input: function($event) {
+                        if ($event.target.composing) {
+                          return
+                        }
+                        _vm.$set(_vm.card, "cvv", $event.target.value)
+                      }
+                    }
+                  })
+                ])
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "form-group" }, [
+                _c("div", { staticClass: "col-md-6" }, [
+                  _c("input", {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.card.month,
+                        expression: "card.month"
+                      }
+                    ],
+                    staticClass: "form-control",
+                    attrs: { placeholder: "MM" },
+                    domProps: { value: _vm.card.month },
+                    on: {
+                      input: function($event) {
+                        if ($event.target.composing) {
+                          return
+                        }
+                        _vm.$set(_vm.card, "month", $event.target.value)
+                      }
+                    }
+                  })
+                ])
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "form-group" }, [
+                _c("div", { staticClass: "col-md-6" }, [
+                  _c("input", {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.card.year,
+                        expression: "card.year"
+                      }
+                    ],
+                    staticClass: "form-control",
+                    attrs: { placeholder: "YYYY" },
+                    domProps: { value: _vm.card.year },
+                    on: {
+                      input: function($event) {
+                        if ($event.target.composing) {
+                          return
+                        }
+                        _vm.$set(_vm.card, "year", $event.target.value)
+                      }
+                    }
+                  })
+                ])
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "form-group" }, [
+                _c("div", { staticClass: "col-md-6" }, [
+                  _c(
+                    "button",
+                    {
+                      staticClass: "btn btn-success",
+                      on: {
+                        click: function($event) {
+                          _vm.updateInfo()
+                        }
+                      }
+                    },
+                    [_vm._v("Update Payment Info")]
+                  )
+                ])
+              ])
             ])
           ])
         ])
       ])
     ])
-  }
-]
+  ])
+}
+var staticRenderFns = []
 render._withStripped = true
 module.exports = { render: render, staticRenderFns: staticRenderFns }
 if (false) {
@@ -48686,6 +48836,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   mounted: function mounted() {
@@ -48698,6 +48850,18 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
       email: '',
       password: ''
     };
+  },
+
+  computed: {
+    email_addr: function email_addr() {
+      if (this.domain != '') return this.email + '@' + this.domain;else return '';
+    }
+  },
+  created: function created() {
+    var that = this;
+    axios.get('/api/domain').then(function (data) {
+      that.domains = data.data;
+    });
   },
 
   methods: {
@@ -48713,60 +48877,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
       });
     },
     checkOut: function checkOut() {
-      if (window.PaymentRequest) {
-        // Yep, we can go ahead! Our code goes here.
-        // Supported payment methods
-        var supportedInstruments = [{
-          supportedMethods: ['basic-card'],
-          data: {
-            supportedNetworks: ['visa', 'mastercard', 'amex', 'discover', 'diners', 'jcb', 'unionpay']
-          }
-        }];
 
-        // Checkout details
-        var details = {
-          displayItems: [{
-            label: 'Web Domain Registration',
-            amount: { currency: 'USD', value: '15.00' }
-          }, {
-            label: 'Yearly Email Subscription ',
-            amount: { currency: 'USD', value: '9.99' }
-          }],
-          total: {
-            label: 'Total due',
-            amount: { currency: 'USD', value: '24.00' }
-          }
-        };
-
-        // 1. Create a `PaymentRequest` instance
-        var request = new PaymentRequest(supportedInstruments, details);
-        var that = this;
-        // 2. Show the native UI with `.show()`
-        request.show()
-        // 3. Process the payment
-        .then(function (result) {
-          // POST the payment information to the server
-          return axios.post('/api/buy/', { domain: that.domain, card: result }).then(function (response) {
-            // 4. Display payment results
-            if (response.status === 200) {
-              // Payment successful
-              return result.complete('success');
-            } else {
-              // Payment failure
-              return result.complete('fail');
-            }
-          }).catch(function () {
-            return result.complete('fail');
-          });
-        });
-      } else {
-        // No support. Proceed the old school way
-        console.log('not supported');
-        axios.post('/api/buy/', { domain: this.domain, email: this.email, password: this.password }).then(function (response) {
-          // 4. Display payment results
-
-        }).catch(function () {});
-      }
+      axios.post('/api/buy/', { domain: this.domain, email: this.email_addr, password: this.password }).then(function (response) {}).catch(function () {});
     }
 
   }
@@ -48835,7 +48947,11 @@ var render = function() {
                     _vm.email = $event.target.value
                   }
                 }
-              })
+              }),
+              _vm._v(" "),
+              _c("b", { attrs: { if: "email_addr != '@' " } }, [
+                _vm._v(_vm._s(_vm.email_addr))
+              ])
             ]),
             _vm._v(" "),
             _c("div", { staticClass: "form-group" }, [
@@ -48849,7 +48965,7 @@ var render = function() {
                   }
                 ],
                 staticClass: "form-control",
-                attrs: { placeholder: "New Email Password" },
+                attrs: { type: "password", placeholder: "New Email Password" },
                 domProps: { value: _vm.password },
                 on: {
                   input: function($event) {

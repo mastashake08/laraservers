@@ -10,11 +10,13 @@
                         <input class="form-control" v-model="domain" placeholder="Domain Name" />
                       </div>
                       <div class="form-group">
-                        <input class="form-control" v-model="email" placeholder="New Email Address" />
+                        <input class="form-control" v-model="email" placeholder="New Email Address"  />
+                        <b if="email_addr != '@' ">{{email_addr}}</b>
                       </div>
                       <div class="form-group">
-                        <input class="form-control" v-model="password" placeholder="New Email Password" />
+                        <input class="form-control" v-model="password" type="password" placeholder="New Email Password" />
                       </div>
+
 
                       <div class="form-group">
                         <button class="btn btn-success" v-on:click="searchDomain()">Search Availability</button>
@@ -79,6 +81,21 @@
             password:''
           }
         },
+        computed: {
+          email_addr : function(){
+            if(this.domain != '')
+              return  this.email + '@' + this.domain;
+            else
+              return '';
+
+          }
+        },
+        created(){
+          var that = this;
+          axios.get('/api/domain').then(function(data){
+            that.domains = data.data;
+          });
+        },
         methods: {
           searchDomain: function(){
             axios.post('/api/check-domain',{domain:this.domain}).then(data =>{
@@ -91,67 +108,14 @@
             })
           },
           checkOut: function(){
-            if (window.PaymentRequest) {
-              // Yep, we can go ahead! Our code goes here.
-              // Supported payment methods
-              var supportedInstruments = [{
-                  supportedMethods: ['basic-card'],
-                  data: {
-                    supportedNetworks: [
-                      'visa', 'mastercard', 'amex', 'discover',
-                      'diners', 'jcb', 'unionpay'
-                    ]
-                  }
-              }];
 
-              // Checkout details
-              var details = {
-                displayItems: [{
-                  label: 'Web Domain Registration',
-                  amount: { currency: 'USD', value: '15.00' }
-                }, {
-                  label: 'Yearly Email Subscription ',
-                  amount: { currency: 'USD', value: '9.99' }
-                }],
-                total: {
-                  label: 'Total due',
-                  amount: { currency: 'USD', value : '24.00' }
-                }
-              };
-
-              // 1. Create a `PaymentRequest` instance
-              var request = new PaymentRequest(supportedInstruments, details);
-              var that = this;
-              // 2. Show the native UI with `.show()`
-              request.show()
-              // 3. Process the payment
-              .then(result => {
-                // POST the payment information to the server
-                return axios.post('/api/buy/',{domain:that.domain,card:result})
-                  .then(response => {
-                  // 4. Display payment results
-                  if (response.status === 200) {
-                    // Payment successful
-                    return result.complete('success');
-                  } else {
-                    // Payment failure
-                    return result.complete('fail');
-                  }
-                }).catch(() => {
-                  return result.complete('fail');
-                });
-              });
-            } else {
-              // No support. Proceed the old school way
-              console.log('not supported')
-              axios.post('/api/buy/',{domain:this.domain,email:this.email,password:this.password})
+              axios.post('/api/buy/',{domain:this.domain,email:this.email_addr,password:this.password})
                 .then(response => {
-                // 4. Display payment results
-
+                
               }).catch(() => {
 
               });
-            }
+
 
           }
 

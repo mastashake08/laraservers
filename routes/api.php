@@ -20,3 +20,23 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 Route::post('check-domain','DomainController@checkDomain');
 Route::get('check-prices','DomainController@checkPrice');
 Route::middleware('auth:api')->post('buy','DomainController@buy');
+Route::middleware('auth:api')->resource('/domain','DomainController');
+Route::middleware('auth:api')->post('/update-billing',function(Request $request){
+
+  \Stripe\Stripe::setApiKey(env('STRIPE_SECRET'));
+  $stripeToken = \Stripe\Token::create(array(
+  "card" => array(
+    "number" => $request->input('card.number'),
+    "exp_month" => $request->input('card.month'),
+    "exp_year" => $request->input('card.year'),
+    "cvc" => $request->input('card.cvv')
+  )
+));
+if($request->user()->subscribed('main')){
+  $request->user()->updateCard($stripeToken);
+}
+else{
+  $request->user()->newSubscription('main', env('STRIPE_FREE_ID'))->create($stripeToken->id);
+}
+  return response()->json(true);
+});
