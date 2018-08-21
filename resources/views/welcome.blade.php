@@ -21,8 +21,9 @@
 						<ul>
 							<li><a href="#intro">Welcome</a></li>
 							<li><a href="#one">Who we are</a></li>
-							<li><a href="#two">What we do</a></li>
+							<!--<li><a href="#two">What we do</a></li>-->
 							<li><a href="#three">Get in touch</a></li>
+
 						</ul>
 					</nav>
 				</div>
@@ -81,6 +82,24 @@
                   </p>
 									<ul class="actions">
 										<li><a href="{{url('/api')}}" class="button">Learn more</a></li>
+									</ul>
+								</div>
+							</div>
+						</section>
+            <section>
+              <a href="#" class="image"><img src="hyperspace/images/join.jpg" alt="" data-position="25% 25%" /></a>
+							<div class="content">
+								<div class="inner">
+									<h2>Ready To Get Started?</h2>
+									<p>Take JCompSolu Webservices for a spin, we promise you will love it!</p>
+									<ul class="actions">
+										<li>
+                    @if(Auth::guest())
+                    <a href="{{url('/register')}}" class="button">Register</a>
+                    <a href="{{url('/login')}}" class="button">Login</a>
+                    @else
+                    <a href="{{url('/home')}}" class="button">Dashboard</a>
+                    @endif</li>
 									</ul>
 								</div>
 							</div>
