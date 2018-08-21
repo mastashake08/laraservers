@@ -48844,6 +48844,127 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   mounted: function mounted() {
@@ -48854,7 +48975,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
       domains: {},
       domain: "",
       email: '',
-      password: ''
+      password: '',
+      ready: false,
+      value: '',
+      type: ''
     };
   },
 
@@ -48867,16 +48991,30 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     var that = this;
     axios.get('/api/domain').then(function (data) {
       that.domains = data.data;
+      that.ready = true;
     });
   },
 
   methods: {
+    newEmail: function newEmail(domain) {
+      this.domain = domain;
+      $('#emailModal').modal();
+    },
+    newRecord: function newRecord(domain) {
+      this.domain = domain;
+      $('#dnsModal').modal();
+    },
     searchDomain: function searchDomain() {
       var _this = this;
 
       axios.post('/api/check-domain', { domain: this.domain }).then(function (data) {
         if (data.data.success) {
-          _this.checkOut();
+          var ans = confirm('This domain/email combo is available for $15/year. Do you want to charge this to your card on file?');
+          if (ans) {
+            _this.checkOut();
+          } else {
+            alert('You must checkout to continue!');
+          }
         } else {
           alert('Domain Unavailable');
         }
@@ -48885,6 +49023,26 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     checkOut: function checkOut() {
 
       axios.post('/api/buy/', { domain: this.domain, email: this.email_addr, password: this.password }).then(function (response) {}).catch(function () {});
+    },
+    addEmail: function addEmail() {
+      var that = this;
+      axios.post('/api/add-email', { email: this.email_addr, password: this.password }).then(function (data) {
+        alert('Email account created!');
+        that.domain = '';
+        that.email = '';
+        that.password = '';
+        $('#emailModal').modal("hide");
+      });
+    },
+    addRecord: function addRecord() {
+      var that = this;
+      axios.post('/api/add-record', { domain: this.domain, type: this.type, value: this.value }).then(function (data) {
+        alert('Record created!');
+        that.domain = '';
+        that.value = '';
+        that.type = '';
+        $('#dnsModal').modal("hide");
+      });
     }
 
   }
@@ -48985,10 +49143,25 @@ var render = function() {
             ]),
             _vm._v(" "),
             _c("div", { staticClass: "form-group" }, [
+              _vm.password.length < 8
+                ? _c("strong", [
+                    _vm._v("Password must be at least 8 characters")
+                  ])
+                : _vm._e(),
+              _vm._v(" "),
+              _c("br"),
+              _vm._v(" "),
+              _vm.domain == ""
+                ? _c("strong", [_vm._v("Domain must be entered")])
+                : _vm._e(),
+              _vm._v(" "),
+              _c("br"),
+              _vm._v(" "),
               _c(
                 "button",
                 {
                   staticClass: "btn btn-success",
+                  attrs: { disabled: _vm.password.length < 8 },
                   on: {
                     click: function($event) {
                       _vm.searchDomain()
@@ -49010,18 +49183,372 @@ var render = function() {
         _c("div", { staticClass: "card card-default" }, [
           _c("div", { staticClass: "card-header" }, [_vm._v("Your Domains")]),
           _vm._v(" "),
-          _c(
-            "div",
-            { staticClass: "card-body" },
-            _vm._l(_vm.domains, function(d) {
-              return _c("ul", [_c("li", [_vm._v(_vm._s(d))])])
-            })
-          )
+          _vm.ready
+            ? _c("div", { staticClass: "card-body" }, [
+                _c("table", { staticClass: "table" }, [
+                  _vm._m(0),
+                  _vm._v(" "),
+                  _c(
+                    "tbody",
+                    _vm._l(_vm.domains, function(d) {
+                      return _c("tr", [
+                        _c("td", [_vm._v(_vm._s(d.domain))]),
+                        _vm._v(" "),
+                        _c("td", [
+                          _c("div", { staticClass: "row" }, [
+                            _vm._m(1, true),
+                            _vm._v(" "),
+                            _c("div", { staticClass: "form-group" }, [
+                              _c("div", { staticClass: "col-md-4" }, [
+                                _c(
+                                  "button",
+                                  {
+                                    staticClass: "btn btn-success",
+                                    on: {
+                                      click: function($event) {
+                                        _vm.newEmail(d.domain)
+                                      }
+                                    }
+                                  },
+                                  [_vm._v("Add New Email Address")]
+                                )
+                              ])
+                            ]),
+                            _vm._v(" "),
+                            _c("div", { staticClass: "form-group" }, [
+                              _c("div", { staticClass: "col-md-4" }, [
+                                _c(
+                                  "button",
+                                  {
+                                    staticClass: "btn btn-info",
+                                    on: {
+                                      click: function($event) {
+                                        _vm.newRecord(d.domain)
+                                      }
+                                    }
+                                  },
+                                  [_vm._v("Manage DNS")]
+                                )
+                              ])
+                            ])
+                          ])
+                        ])
+                      ])
+                    })
+                  )
+                ])
+              ])
+            : _vm._e()
         ])
       ])
     ]),
     _vm._v(" "),
     _c("br"),
+    _vm._v(" "),
+    _c(
+      "div",
+      {
+        staticClass: "modal fade",
+        attrs: { id: "emailModal", role: "dialog" }
+      },
+      [
+        _c("div", { staticClass: "modal-dialog" }, [
+          _c("div", { staticClass: "modal-content" }, [
+            _vm._m(2),
+            _vm._v(" "),
+            _c("div", { staticClass: "modal-body" }, [
+              _c("div", { staticClass: "form-group" }, [
+                _c("input", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.email,
+                      expression: "email"
+                    }
+                  ],
+                  staticClass: "form-control",
+                  attrs: { placeholder: "New Email Address" },
+                  domProps: { value: _vm.email },
+                  on: {
+                    input: function($event) {
+                      if ($event.target.composing) {
+                        return
+                      }
+                      _vm.email = $event.target.value
+                    }
+                  }
+                }),
+                _vm._v(" "),
+                _c("b", { attrs: { if: "email_addr != '@' " } }, [
+                  _vm._v(_vm._s(_vm.email_addr))
+                ])
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "form-group" }, [
+                _c("input", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.password,
+                      expression: "password"
+                    }
+                  ],
+                  staticClass: "form-control",
+                  attrs: {
+                    type: "password",
+                    placeholder: "New Email Password"
+                  },
+                  domProps: { value: _vm.password },
+                  on: {
+                    input: function($event) {
+                      if ($event.target.composing) {
+                        return
+                      }
+                      _vm.password = $event.target.value
+                    }
+                  }
+                })
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "form-group" }, [
+                _vm.password.length < 8
+                  ? _c("strong", [
+                      _vm._v("Password must be at least 8 characters")
+                    ])
+                  : _vm._e(),
+                _vm._v(" "),
+                _c("br"),
+                _vm._v(" "),
+                _vm.domain == ""
+                  ? _c("strong", [_vm._v("Domain must be entered")])
+                  : _vm._e(),
+                _vm._v(" "),
+                _c("br"),
+                _vm._v(" "),
+                _c(
+                  "button",
+                  {
+                    staticClass: "btn btn-success",
+                    attrs: { disabled: _vm.password.length < 8 },
+                    on: {
+                      click: function($event) {
+                        _vm.addEmail()
+                      }
+                    }
+                  },
+                  [_vm._v("Add Email")]
+                )
+              ])
+            ]),
+            _vm._v(" "),
+            _vm._m(3)
+          ])
+        ])
+      ]
+    ),
+    _vm._v(" "),
+    _c(
+      "div",
+      { staticClass: "modal fade", attrs: { id: "dnsModal", role: "dialog" } },
+      [
+        _c("div", { staticClass: "modal-dialog" }, [
+          _c("div", { staticClass: "modal-content" }, [
+            _vm._m(4),
+            _vm._v(" "),
+            _c("div", { staticClass: "modal-body" }, [
+              _c("div", { staticClass: "form-group" }, [
+                _c(
+                  "select",
+                  {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.type,
+                        expression: "type"
+                      }
+                    ],
+                    staticClass: "form-control",
+                    staticStyle: { "max-width": "400px" },
+                    attrs: { id: "customdnsType", placeholder: "Record Type" },
+                    on: {
+                      change: function($event) {
+                        var $$selectedVal = Array.prototype.filter
+                          .call($event.target.options, function(o) {
+                            return o.selected
+                          })
+                          .map(function(o) {
+                            var val = "_value" in o ? o._value : o.value
+                            return val
+                          })
+                        _vm.type = $event.target.multiple
+                          ? $$selectedVal
+                          : $$selectedVal[0]
+                      }
+                    }
+                  },
+                  [
+                    _c(
+                      "option",
+                      {
+                        attrs: {
+                          selected: "",
+                          value: "A",
+                          "data-hint":
+                            "Enter an IPv4 address (i.e. a dotted quad, such as 123.456.789.012).  The 'local' alias sets the record to this box's public IPv4 address."
+                        }
+                      },
+                      [_vm._v("A (IPv4 address)")]
+                    ),
+                    _vm._v(" "),
+                    _c(
+                      "option",
+                      {
+                        attrs: {
+                          value: "AAAA",
+                          "data-hint":
+                            "Enter an IPv6 address.  The 'local' alias sets the record to this box's public IPv6 address."
+                        }
+                      },
+                      [_vm._v("AAAA (IPv6 address)")]
+                    ),
+                    _vm._v(" "),
+                    _c(
+                      "option",
+                      {
+                        attrs: {
+                          value: "CAA",
+                          "data-hint":
+                            'Enter a CA that can issue certificates for this domain in the form of FLAG TAG VALUE. (0 issuewild "letsencrypt.org")'
+                        }
+                      },
+                      [_vm._v("CAA (Certificate Authority Authorization)")]
+                    ),
+                    _vm._v(" "),
+                    _c(
+                      "option",
+                      {
+                        attrs: {
+                          value: "CNAME",
+                          "data-hint":
+                            "Enter another domain name followed by a period at the end (e.g. mypage.github.io.)."
+                        }
+                      },
+                      [_vm._v("CNAME (DNS forwarding)")]
+                    ),
+                    _vm._v(" "),
+                    _c(
+                      "option",
+                      {
+                        attrs: {
+                          value: "TXT",
+                          "data-hint": "Enter arbitrary text."
+                        }
+                      },
+                      [_vm._v("TXT (text record)")]
+                    ),
+                    _vm._v(" "),
+                    _c(
+                      "option",
+                      {
+                        attrs: {
+                          value: "MX",
+                          "data-hint":
+                            "Enter record in the form of PRIORITY DOMAIN., including trailing period (e.g. 20 mx.example.com.)."
+                        }
+                      },
+                      [_vm._v("MX (mail exchanger)")]
+                    ),
+                    _vm._v(" "),
+                    _c(
+                      "option",
+                      {
+                        attrs: {
+                          value: "SRV",
+                          "data-hint":
+                            "Enter record in the form of PRIORITY WEIGHT PORT TARGET., including trailing period (e.g. 10 10 5060 sip.example.com.)."
+                        }
+                      },
+                      [_vm._v("SRV (service record)")]
+                    ),
+                    _vm._v(" "),
+                    _c(
+                      "option",
+                      {
+                        attrs: {
+                          value: "SSHFP",
+                          "data-hint":
+                            "Enter record in the form of ALGORITHM TYPE FINGERPRINT."
+                        }
+                      },
+                      [_vm._v("SSHFP (SSH fingerprint record)")]
+                    ),
+                    _vm._v(" "),
+                    _c(
+                      "option",
+                      {
+                        attrs: {
+                          value: "NS",
+                          "data-hint":
+                            "Enter a hostname to which this subdomain should be delegated to"
+                        }
+                      },
+                      [_vm._v("NS (DNS subdomain delegation)")]
+                    )
+                  ]
+                )
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "form-group" }, [
+                _c("input", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.value,
+                      expression: "value"
+                    }
+                  ],
+                  staticClass: "form-control",
+                  attrs: { placeholder: "Value" },
+                  domProps: { value: _vm.value },
+                  on: {
+                    input: function($event) {
+                      if ($event.target.composing) {
+                        return
+                      }
+                      _vm.value = $event.target.value
+                    }
+                  }
+                })
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "form-group" }, [
+                _c(
+                  "button",
+                  {
+                    staticClass: "btn btn-success",
+                    attrs: {
+                      disabled: _vm.value.length == 0 && _vm.type.length == 0
+                    },
+                    on: {
+                      click: function($event) {
+                        _vm.addRecord()
+                      }
+                    }
+                  },
+                  [_vm._v("Add Record")]
+                )
+              ])
+            ]),
+            _vm._v(" "),
+            _vm._m(5)
+          ])
+        ])
+      ]
+    ),
     _vm._v(" "),
     _c(
       "div",
@@ -49047,9 +49574,9 @@ var render = function() {
               )
             ]),
             _vm._v(" "),
-            _vm._m(0),
+            _vm._m(6),
             _vm._v(" "),
-            _vm._m(1)
+            _vm._m(7)
           ])
         ])
       ]
@@ -49057,6 +49584,101 @@ var render = function() {
   ])
 }
 var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("thead", [
+      _c("tr", [
+        _c("th", [_vm._v("Domains")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("Actions")])
+      ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "form-group" }, [
+      _c("div", { staticClass: "col-md-4" }, [
+        _c(
+          "a",
+          {
+            staticClass: "btn btn-warning",
+            attrs: { href: "https://box.jyroneparkeremail.space/mail" }
+          },
+          [_vm._v("Check Mail")]
+        )
+      ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "modal-header" }, [
+      _c(
+        "button",
+        {
+          staticClass: "close",
+          attrs: { type: "button", "data-dismiss": "modal" }
+        },
+        [_vm._v("×")]
+      ),
+      _vm._v(" "),
+      _c("h4", { staticClass: "modal-title" }, [
+        _vm._v("Add New Email Account")
+      ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "modal-footer" }, [
+      _c(
+        "button",
+        {
+          staticClass: "btn btn-default",
+          attrs: { type: "button", "data-dismiss": "modal" }
+        },
+        [_vm._v("Close")]
+      )
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "modal-header" }, [
+      _c(
+        "button",
+        {
+          staticClass: "close",
+          attrs: { type: "button", "data-dismiss": "modal" }
+        },
+        [_vm._v("×")]
+      ),
+      _vm._v(" "),
+      _c("h4", { staticClass: "modal-title" }, [_vm._v("Add New DNS Record")])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "modal-footer" }, [
+      _c(
+        "button",
+        {
+          staticClass: "btn btn-default",
+          attrs: { type: "button", "data-dismiss": "modal" }
+        },
+        [_vm._v("Close")]
+      )
+    ])
+  },
   function() {
     var _vm = this
     var _h = _vm.$createElement

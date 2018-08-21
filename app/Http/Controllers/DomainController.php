@@ -245,4 +245,29 @@ class DomainController extends Controller
       	return response()->json($e->getMessage());
       }
     }
+
+    public function addEmail(Request $request){
+      $res = $this->client->request('POST', 'https://box.jyroneparkeremail.space/admin/mail/users/add ', [
+          'auth' => [env('MIAB_USERNAME'), env('MIAB_PASSWORD')],
+          'form_params' => [
+              'email' => $request->email,
+              'password' => $request->password,
+
+          ]
+      ]);
+      return response()->json($res);
+    }
+
+    public function addRecord(Request $request){
+      $res = $this->client->request('PUT', 'https://box.jyroneparkeremail.space/admin/dns/custom/'.$request->domain.'/'.$request->type, [
+          'auth' => [
+            env('MIAB_USERNAME'),
+            env('MIAB_PASSWORD')
+          ],
+          'body' => $request->value
+
+      ]);
+
+      return response()->json($res);
+    }
 }
