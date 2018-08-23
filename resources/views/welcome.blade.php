@@ -6,7 +6,7 @@
 -->
 <html>
 	<head>
-		<title>JCompSolu Webservices</title>
+		<title>J Comp Solu Webservices</title>
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
 		<link rel="stylesheet" href="hyperspace/assets/css/main.css" />
@@ -20,7 +20,7 @@
 					<nav>
 						<ul>
 							<li><a href="#intro">Welcome</a></li>
-							<li><a href="#one">Who we are</a></li>
+							<li><a href="#one">What We Offer</a></li>
 							<!--<li><a href="#two">What we do</a></li>-->
 							<li><a href="#three">Get in touch</a></li>
 
@@ -153,7 +153,7 @@
 					<section id="three" class="wrapper style1 fade-up">
 						<div class="inner">
 							<h2>Get in touch</h2>
-							<p>Phasellus convallis elit id ullamcorper pulvinar. Duis aliquam turpis mauris, eu ultricies erat malesuada quis. Aliquam dapibus, lacus eget hendrerit bibendum, urna est aliquam sem, sit amet imperdiet est velit quis lorem.</p>
+							<p>Have any questions and/or concerns feel free to contact us!</p>
 							<div class="split style1">
 								<section>
 									<form method="post" action="{{url('/send-message')}}">
@@ -195,11 +195,11 @@
 										<li>
 											<h3>Social</h3>
 											<ul class="icons">
-												<li><a href="#" class="fa-twitter"><span class="label">Twitter</span></a></li>
-												<li><a href="#" class="fa-facebook"><span class="label">Facebook</span></a></li>
-												<li><a href="#" class="fa-github"><span class="label">GitHub</span></a></li>
+												<li><a href="https://twitter.com/jcompsolu" class="fa-twitter"><span class="label">Twitter</span></a></li>
+												<li><a href="https://facebook.com/jcompsolu" class="fa-facebook"><span class="label">Facebook</span></a></li>
+												<!-- <li><a href="#" class="fa-github"><span class="label">GitHub</span></a></li>
 												<li><a href="#" class="fa-instagram"><span class="label">Instagram</span></a></li>
-												<li><a href="#" class="fa-linkedin"><span class="label">LinkedIn</span></a></li>
+												<li><a href="#" class="fa-linkedin"><span class="label">LinkedIn</span></a></li> -->
 											</ul>
 										</li>
 									</ul>

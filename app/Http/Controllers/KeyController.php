@@ -6,13 +6,16 @@ use App\Event\KeyCreated;
 use App\Event\KeyDestroyed;
 use Illuminate\Http\Request;
 use App\Key;
-
+use Laravel\Forge\ApiProvider;
+use Laravel\Forge\Forge;
+use Laravel\Forge\SshKeys\SshKeysManager;
 class KeyController extends Controller
 {
-  private $forge;
+  private $forge, $credential;
 
     public function __construct(){
-      $this->forge = new Themsaid\Forge\Forge(env('FORGE_TOKEN'));
+      $this->forge = new Forge(new ApiProvider(env('FORGE_API')));
+      $this->credential = $this->forge->credentialFor('ocean2');
     }
     /**
      * Display a listing of the resource.
@@ -53,10 +56,18 @@ class KeyController extends Controller
           'key' => $request->key
         ];
 
-        $this->forge->createSSHKey($request->serverId, $data, $wait = true);
         $key = $request->user()->keys()->create($data);
-        event(new KeyCreated($key));
+        //event(new KeyCreated($key));
         return response()->json($key);
+    }
+
+    public function addKeyToServer($keyId,$serverId, Request $request){
+      $k = \App\Key::findOrFail($keyId);
+      $s = \App\Server::findOrFail($serverId);
+      $keys = new SshKeysManager();
+      $server = $this->forge[$s->name];
+      $key = $keys->create($k->name)->withContent($k->key)->on($server);
+      return response()->json($key);
     }
 
     /**

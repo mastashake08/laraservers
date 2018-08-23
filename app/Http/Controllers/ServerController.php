@@ -6,12 +6,16 @@ use Illuminate\Http\Request;
 use App\Server;
 use App\Events\ServerCreated;
 use App\Events\ServerDestroyed;
+
+use Laravel\Forge\ApiProvider;
+use Laravel\Forge\Forge;
 class ServerController extends Controller
 {
-  private $forge;
+  private $forge, $credential;
 
     public function __construct(){
-      $this->forge = new Themsaid\Forge\Forge(env('FORGE_TOKEN'));
+      $this->forge = new Forge(new ApiProvider(env('FORGE_API')));
+      $this->credential = $this->forge->credentialFor('ocean2');
     }
     /**
      * Display a listing of the resource.
@@ -21,7 +25,7 @@ class ServerController extends Controller
     public function index(Request $request)
     {
         //
-        return $request->user()->servers;
+        return response()->json($request->user()->servers);
     }
 
     /**
@@ -44,26 +48,28 @@ class ServerController extends Controller
     public function store(Request $request)
     {
         //
-        $request->validate([
-            'name' => 'required|unique:servers|max:255',
-            'size' => 'required',
-            'database' => 'required',
-            'region' => 'required',
+      /*  $request->validate([
+            'server.name' => 'required|unique:servers|max:255',
+            'server.size' => 'required',
+            'server.region' => 'required',
         ]);
-
-        $server = $this->forge->createServer([
-            "provider"=> "ocean2",
-            "credential_id"=> 1,
-            "name"=> $request->name,
-            "size"=> $request->size,//"512MB"
-            "database"=> $request->database,
-            "php_version"=> "php71",
-            "region"=> $request->region
-        ]);
-        event(new ServerCreated($server))>delay(now()->addMinutes(2));
+        */
+        $server = $this->forge->create()
+          ->droplet($request->input('server.name'))
+          ->usingCredential($this->credential)
+          ->withMemoryOf($request->input('server.memory.size'))
+          ->at($request->input('server.region'))
+          ->runningPhp('7.2')
+          ->save();
+      //  event(new ServerCreated($server))->delay(now()->addMinutes(2));
         return response()->json($request->user()->servers()->create([
-          'server_id' => $server->id,
-          'name' => $server->name
+          'server_id' => $server->id(),
+          'name' => $server->name(),
+          'memory' => $server->size(),
+          'region' => $server->region(),
+          'ip' => $server->ip(),
+          'sudopassword' => encrypt($server->sudoPassword()),
+          'databasepassword' => encrypt($server->databasePassword())
         ]));
 
     }
@@ -114,8 +120,9 @@ class ServerController extends Controller
     {
         //
         $server = Server::findOrFail($id);
-        $this->forge->deleteServer($server->server_id);
-        event(new ServerDestroyed($server));
+        //$s = $this->forge->get($server->server_id);
+        //$s->delete();
+        //event(new ServerDestroyed($server));
         return response()->json([
           'deleted' => $server->delete()
         ]);

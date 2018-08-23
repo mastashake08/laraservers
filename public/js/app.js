@@ -48162,11 +48162,205 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
-    mounted: function mounted() {
-        console.log('Component mounted.');
+  mounted: function mounted() {
+    console.log('Component mounted.');
+  },
+  data: function data() {
+    return {
+      ready: false,
+      servers: [],
+      server: {
+        region: '',
+        memory: {
+          price: ''
+        }
+      },
+      serverSpecs: {
+
+        memory: [{
+          size: '1GB',
+          price: '$7.50'
+        }, {
+          size: '2GB',
+          price: '$15.00'
+        }, {
+          size: '3GB',
+          price: '$22.50'
+        }],
+        regions: [{
+          code: 'ams2',
+          name: 'Amsterdam 2'
+        }, {
+          code: 'ams3',
+          name: 'Amsterdam 3'
+        }, {
+          code: 'blr1',
+          name: 'Bangalore'
+        }, {
+          code: 'lon1',
+          name: 'London'
+        }, {
+          code: 'fra1',
+          name: 'Frankfurt'
+        }, {
+          code: 'nyc1',
+          name: '	New York 1'
+        }, {
+          code: 'nyc2',
+          name: '	New York 2'
+        }, {
+          code: 'nyc3',
+          name: '	New York 3'
+        }, {
+          code: 'sfo1',
+          name: 'San Francisco 1'
+        }, {
+          code: 'sfo2',
+          name: 'San Francisco 2'
+        }, {
+          code: 'sgp1',
+          name: 'Singapore'
+        }, {
+          code: 'tor1',
+          name: 'Toronto'
+        }]
+      }
+    };
+  },
+
+  computed: {},
+  created: function created() {
+    var that = this;
+    axios.get('/api/server').then(function (data) {
+      that.servers = data.data;
+      that.ready = true;
+    });
+  },
+
+  methods: {
+    newEmail: function newEmail(domain) {
+      this.domain = domain;
+      $('#emailModal').modal();
+    },
+    newRecord: function newRecord(domain) {
+      this.domain = domain;
+      $('#dnsModal').modal();
+    },
+    searchDomain: function searchDomain() {
+      var _this = this;
+
+      axios.post('/api/check-domain', { domain: this.domain }).then(function (data) {
+        if (data.data.success) {
+          var ans = confirm('This domain/email combo is available for $15/year. Do you want to charge this to your card on file?');
+          if (ans) {
+            _this.checkOut();
+          } else {
+            alert('You must checkout to continue!');
+          }
+        } else {
+          alert('Domain Unavailable');
+        }
+      });
+    },
+    checkOut: function checkOut() {
+
+      axios.post('/api/buy/', { domain: this.domain, email: this.email_addr, password: this.password }).then(function (response) {}).catch(function () {});
+    },
+    addEmail: function addEmail() {
+      var that = this;
+      axios.post('/api/add-email', { email: this.email_addr, password: this.password }).then(function (data) {
+        alert('Email account created!');
+        that.domain = '';
+        that.email = '';
+        that.password = '';
+        $('#emailModal').modal("hide");
+      });
+    },
+    addServer: function addServer() {
+      var that = this;
+      axios.post('/api/server', { server: this.server }).then(function (data) {
+        alert('Server created! It should be available in 5-10 minutes');
+        that.servers.push(data.data);
+      });
+    },
+    deleteServer: function deleteServer(id) {
+      var that = this;
+      axios.delete('/api/server/' + id).then(function (data) {
+        console.log(data.data);
+      });
     }
+
+  }
+
 });
 
 /***/ }),
@@ -48177,26 +48371,244 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _vm._m(0)
+  return _c("div", { staticClass: "container" }, [
+    _c("div", { staticClass: "row justify-content-center" }, [
+      _c("div", { staticClass: "col-md-8" }, [
+        _c("div", { staticClass: "card card-default" }, [
+          _c("div", { staticClass: "card-header" }, [
+            _vm._v("Buy A New Server")
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "card-body" }, [
+            _c("div", { staticClass: "form-group" }, [
+              _c("input", {
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model",
+                    value: _vm.server.name,
+                    expression: "server.name"
+                  }
+                ],
+                staticClass: "form-control",
+                attrs: { placeholder: "Name Of Server i.e. fluffy-kitten" },
+                domProps: { value: _vm.server.name },
+                on: {
+                  input: function($event) {
+                    if ($event.target.composing) {
+                      return
+                    }
+                    _vm.$set(_vm.server, "name", $event.target.value)
+                  }
+                }
+              })
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "form-group" }, [
+              _c(
+                "select",
+                {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.server.region,
+                      expression: "server.region"
+                    }
+                  ],
+                  staticClass: "form-control",
+                  attrs: { id: "region", placeholder: "Server Region" },
+                  on: {
+                    change: function($event) {
+                      var $$selectedVal = Array.prototype.filter
+                        .call($event.target.options, function(o) {
+                          return o.selected
+                        })
+                        .map(function(o) {
+                          var val = "_value" in o ? o._value : o.value
+                          return val
+                        })
+                      _vm.$set(
+                        _vm.server,
+                        "region",
+                        $event.target.multiple
+                          ? $$selectedVal
+                          : $$selectedVal[0]
+                      )
+                    }
+                  }
+                },
+                _vm._l(_vm.serverSpecs.regions, function(r) {
+                  return _c("option", { domProps: { value: r.code } }, [
+                    _vm._v(_vm._s(r.name))
+                  ])
+                })
+              ),
+              _vm._v(" "),
+              _c("div", { staticClass: "form-group" }, [
+                _c(
+                  "select",
+                  {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.server.memory,
+                        expression: "server.memory"
+                      }
+                    ],
+                    staticClass: "form-control",
+                    attrs: { id: "memory", placeholder: "Memory Size" },
+                    on: {
+                      change: function($event) {
+                        var $$selectedVal = Array.prototype.filter
+                          .call($event.target.options, function(o) {
+                            return o.selected
+                          })
+                          .map(function(o) {
+                            var val = "_value" in o ? o._value : o.value
+                            return val
+                          })
+                        _vm.$set(
+                          _vm.server,
+                          "memory",
+                          $event.target.multiple
+                            ? $$selectedVal
+                            : $$selectedVal[0]
+                        )
+                      }
+                    }
+                  },
+                  _vm._l(_vm.serverSpecs.memory, function(m) {
+                    return _c("option", { domProps: { value: m } }, [
+                      _vm._v(_vm._s(m.size) + " - " + _vm._s(m.price))
+                    ])
+                  })
+                ),
+                _vm._v(
+                  "\n                    Total Price: " +
+                    _vm._s(_vm.server.memory.price) +
+                    "/mo\n                  "
+                )
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "form-group" }, [
+                _c(
+                  "button",
+                  {
+                    staticClass: "btn btn-success",
+                    on: {
+                      click: function($event) {
+                        _vm.addServer()
+                      }
+                    }
+                  },
+                  [_vm._v("Buy Server")]
+                )
+              ])
+            ])
+          ])
+        ])
+      ])
+    ]),
+    _vm._v(" "),
+    _c("br"),
+    _vm._v(" "),
+    _c("div", { staticClass: "row justify-content-center" }, [
+      _c("div", { staticClass: "col-md-8" }, [
+        _c("div", { staticClass: "card card-default" }, [
+          _c("div", { staticClass: "card-header" }, [_vm._v("Your Servers")]),
+          _vm._v(" "),
+          _vm.ready
+            ? _c("div", { staticClass: "card-body" }, [
+                _c("table", { staticClass: "table" }, [
+                  _vm._m(0),
+                  _vm._v(" "),
+                  _c(
+                    "tbody",
+                    _vm._l(_vm.servers, function(s) {
+                      return _c("tr", [
+                        _c("td", [_vm._v(_vm._s(s.name))]),
+                        _vm._v(" "),
+                        _c("td", [
+                          _c("div", { staticClass: "row" }, [
+                            _vm._m(1, true),
+                            _vm._v(" "),
+                            _c("div", { staticClass: "form-group" }, [
+                              _c("div", { staticClass: "col-md-4" }, [
+                                _c(
+                                  "button",
+                                  {
+                                    staticClass: "btn btn-success",
+                                    on: {
+                                      click: function($event) {
+                                        _vm.newEmail(_vm.d.domain)
+                                      }
+                                    }
+                                  },
+                                  [_vm._v("Add New Email Address")]
+                                )
+                              ])
+                            ]),
+                            _vm._v(" "),
+                            _c("div", { staticClass: "form-group" }, [
+                              _c("div", { staticClass: "col-md-4" }, [
+                                _c(
+                                  "button",
+                                  {
+                                    staticClass: "btn btn-danger",
+                                    on: {
+                                      click: function($event) {
+                                        _vm.deleteServer(s.id)
+                                      }
+                                    }
+                                  },
+                                  [_vm._v("Delete Server")]
+                                )
+                              ])
+                            ])
+                          ])
+                        ])
+                      ])
+                    })
+                  )
+                ])
+              ])
+            : _vm._e()
+        ])
+      ])
+    ]),
+    _vm._v(" "),
+    _c("br")
+  ])
 }
 var staticRenderFns = [
   function() {
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "container" }, [
-      _c("div", { staticClass: "row justify-content-center" }, [
-        _c("div", { staticClass: "col-md-8" }, [
-          _c("div", { staticClass: "card card-default" }, [
-            _c("div", { staticClass: "card-header" }, [_vm._v("Your Servers")]),
-            _vm._v(" "),
-            _c("div", { staticClass: "card-body" }, [
-              _vm._v(
-                "\n                    I'm an example component.\n                "
-              )
-            ])
-          ])
-        ])
+    return _c("thead", [
+      _c("tr", [
+        _c("th", [_vm._v("Server")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("Actions")])
+      ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "form-group" }, [
+      _c("div", { staticClass: "col-md-4" }, [
+        _c(
+          "a",
+          {
+            staticClass: "btn btn-warning",
+            attrs: { href: "https://box.jyroneparkeremail.space/mail" }
+          },
+          [_vm._v("Check Mail")]
+        )
       ])
     ])
   }
@@ -48554,11 +48966,89 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
-    mounted: function mounted() {
-        console.log('Component mounted.');
+  mounted: function mounted() {
+    console.log('Component mounted.');
+  },
+  data: function data() {
+    return {
+      keys: [],
+      key: {},
+      ready: false
+    };
+  },
+  created: function created() {
+    var that = this;
+    axios.get('/api/key').then(function (data) {
+      that.keys = data.data;
+      that.ready = true;
+    });
+  },
+
+  methods: {
+    deleteKey: function deleteKey(id) {
+      axios.delete('/api/key/' + id).then(function (data) {
+        console.log(data.data);
+      });
+    },
+    addKey: function addKey() {
+      var that = this;
+      axios.post('/api/key', { name: this.key.name, key: this.key.key }).then(function (data) {
+        that.keys.push(data.data);
+      });
     }
+  }
 });
 
 /***/ }),
@@ -48569,26 +49059,147 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _vm._m(0)
+  return _c("div", { staticClass: "container" }, [
+    _c("div", { staticClass: "row justify-content-center" }, [
+      _c("div", { staticClass: "col-md-8" }, [
+        _c("div", { staticClass: "card card-default" }, [
+          _c("div", { staticClass: "card-header" }, [_vm._v("SSH Keys")]),
+          _vm._v(" "),
+          _c("div", { staticClass: "card-body" }, [
+            _c("div", { staticClass: "form-group" }, [
+              _c("input", {
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model",
+                    value: _vm.key.name,
+                    expression: "key.name"
+                  }
+                ],
+                staticClass: "form-control",
+                attrs: { placeholder: "Name Of Key" },
+                domProps: { value: _vm.key.name },
+                on: {
+                  input: function($event) {
+                    if ($event.target.composing) {
+                      return
+                    }
+                    _vm.$set(_vm.key, "name", $event.target.value)
+                  }
+                }
+              })
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "form-group" }, [
+              _c(
+                "textarea",
+                {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.key.key,
+                      expression: "key.key"
+                    }
+                  ],
+                  staticClass: "form-control",
+                  attrs: { placeholder: "Key Contents" },
+                  domProps: { value: _vm.key.key },
+                  on: {
+                    input: function($event) {
+                      if ($event.target.composing) {
+                        return
+                      }
+                      _vm.$set(_vm.key, "key", $event.target.value)
+                    }
+                  }
+                },
+                [_vm._v(_vm._s(_vm.key.key))]
+              )
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "form-group" }, [
+              _c(
+                "button",
+                {
+                  staticClass: "btn btn-success",
+                  on: {
+                    click: function($event) {
+                      _vm.addKey()
+                    }
+                  }
+                },
+                [_vm._v("Add Key")]
+              )
+            ])
+          ])
+        ])
+      ])
+    ]),
+    _vm._v(" "),
+    _c("br"),
+    _vm._v(" "),
+    _c("div", { staticClass: "row justify-content-center" }, [
+      _c("div", { staticClass: "col-md-8" }, [
+        _c("div", { staticClass: "card card-default" }, [
+          _c("div", { staticClass: "card-header" }, [_vm._v("Your Keys")]),
+          _vm._v(" "),
+          _vm.ready
+            ? _c("div", { staticClass: "card-body" }, [
+                _c("table", { staticClass: "table" }, [
+                  _vm._m(0),
+                  _vm._v(" "),
+                  _c(
+                    "tbody",
+                    _vm._l(_vm.keys, function(k) {
+                      return _c("tr", [
+                        _c("td", [_vm._v(_vm._s(k.name))]),
+                        _vm._v(" "),
+                        _c("td", [_vm._v(_vm._s(k.key))]),
+                        _vm._v(" "),
+                        _c("td", [
+                          _c("div", { staticClass: "row" }, [
+                            _c("div", { staticClass: "form-group" }, [
+                              _c("div", { staticClass: "col-md-4" }, [
+                                _c(
+                                  "button",
+                                  {
+                                    staticClass: "btn btn-danger",
+                                    on: {
+                                      click: function($event) {
+                                        _vm.deleteKey(k.id)
+                                      }
+                                    }
+                                  },
+                                  [_vm._v("Delete Key")]
+                                )
+                              ])
+                            ])
+                          ])
+                        ])
+                      ])
+                    })
+                  )
+                ])
+              ])
+            : _vm._e()
+        ])
+      ])
+    ])
+  ])
 }
 var staticRenderFns = [
   function() {
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "container" }, [
-      _c("div", { staticClass: "row justify-content-center" }, [
-        _c("div", { staticClass: "col-md-8" }, [
-          _c("div", { staticClass: "card card-default" }, [
-            _c("div", { staticClass: "card-header" }, [_vm._v("SSH Keys")]),
-            _vm._v(" "),
-            _c("div", { staticClass: "card-body" }, [
-              _vm._v(
-                "\n                    I'm an example component.\n                "
-              )
-            ])
-          ])
-        ])
+    return _c("thead", [
+      _c("tr", [
+        _c("th", [_vm._v("Name")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("Key")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("Actions")])
       ])
     ])
   }
