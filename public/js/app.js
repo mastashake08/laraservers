@@ -48247,14 +48247,17 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
       serverSpecs: {
 
         memory: [{
-          size: '1GB',
+          size: '01',
+          name: '1GB',
           price: '$7.50'
         }, {
-          size: '2GB',
+          size: '03',
+          name: '2GB',
           price: '$15.00'
         }, {
-          size: '3GB',
-          price: '$22.50'
+          size: '07',
+          name: '4GB',
+          price: '$30.00'
         }],
         regions: [{
           code: 'ams2',
@@ -48352,10 +48355,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         that.servers.push(data.data);
       });
     },
-    deleteServer: function deleteServer(id) {
+    deleteServer: function deleteServer(index) {
       var that = this;
-      axios.delete('/api/server/' + id).then(function (data) {
-        console.log(data.data);
+      axios.delete('/api/server/' + this.servers[index].id).then(function (data) {
+        that.servers.splice(index, 1);
       });
     }
 
@@ -48481,7 +48484,7 @@ var render = function() {
                   },
                   _vm._l(_vm.serverSpecs.memory, function(m) {
                     return _c("option", { domProps: { value: m } }, [
-                      _vm._v(_vm._s(m.size) + " - " + _vm._s(m.price))
+                      _vm._v(_vm._s(m.name) + " - " + _vm._s(m.price))
                     ])
                   })
                 ),
@@ -48526,7 +48529,7 @@ var render = function() {
                   _vm._v(" "),
                   _c(
                     "tbody",
-                    _vm._l(_vm.servers, function(s) {
+                    _vm._l(_vm.servers, function(s, index) {
                       return _c("tr", [
                         _c("td", [_vm._v(_vm._s(s.name))]),
                         _vm._v(" "),
@@ -48559,7 +48562,7 @@ var render = function() {
                                     staticClass: "btn btn-danger",
                                     on: {
                                       click: function($event) {
-                                        _vm.deleteServer(s.id)
+                                        _vm.deleteServer(index)
                                       }
                                     }
                                   },

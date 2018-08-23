@@ -54,10 +54,22 @@ class ServerController extends Controller
             'server.region' => 'required',
         ]);
         */
+        switch($request->input('server.memory.price')){
+          case '$7.50':
+
+            $request->user()->newSubscription('beginner-server-monthly','beginner-server-monthly')->create();
+            break;
+          case '$15.00':
+            $request->user()->newSubscription('intermediate-server-monthly','intermediate-server-monthly')->create();
+            break;
+          case '$22.50':
+            $request->user()->newSubscription('advance-server-monthly','advance-server-monthly')->create();
+            break;
+        }
         $server = $this->forge->create()
           ->droplet($request->input('server.name'))
           ->usingCredential($this->credential)
-          ->withMemoryOf($request->input('server.memory.size'))
+          ->withMemoryOf($request->input('server.memory.name'))
           ->at($request->input('server.region'))
           ->runningPhp('7.2')
           ->save();
@@ -116,12 +128,23 @@ class ServerController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy($id,Request $request)
     {
         //
         $server = Server::findOrFail($id);
-        //$s = $this->forge->get($server->server_id);
-        //$s->delete();
+        $s = $this->forge->get($server->server_id);
+        $s->delete();
+        switch($server->memory){
+          case '01':
+          $request->user()->subscription('beginner-server-monthly')->cancel();
+          break;
+          case '03':
+          $request->user()->subscription('intermediate-server-monthly')->cancel();
+          break;
+          case '05':
+          $request->user()->subscription('advance-server-monthly')->cancel();
+          break;
+        }
         //event(new ServerDestroyed($server));
         return response()->json([
           'deleted' => $server->delete()

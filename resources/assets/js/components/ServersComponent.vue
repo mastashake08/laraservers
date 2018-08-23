@@ -15,7 +15,7 @@
                         </select>
                       <div class="form-group">
                         <select id="memory" class="form-control" v-model="server.memory"  placeholder="Memory Size">
-                            <option v-for="m in serverSpecs.memory" :value="m">{{m.size}} - {{m.price}}</option>
+                            <option v-for="m in serverSpecs.memory" :value="m">{{m.name}} - {{m.price}}</option>
                         </select>
                         Total Price: {{server.memory.price}}/mo
                       </div>
@@ -45,7 +45,7 @@
                             </tr>
                           </thead>
                           <tbody>
-                            <tr v-for="s in servers">
+                            <tr v-for="(s,index) in servers">
                               <td>{{s.name}}</td>
                               <td>
                                 <div class="row">
@@ -61,7 +61,7 @@
                                 </div>
                                 <div class="form-group">
                                   <div class="col-md-4">
-                                  <button class="btn btn-danger" v-on:click="deleteServer(s.id)">Delete Server</button>
+                                  <button class="btn btn-danger" v-on:click="deleteServer(index)">Delete Server</button>
                                 </div>
                                 </div>
                               </div>
@@ -100,16 +100,19 @@
 
                 memory: [
                   {
-                    size: '1GB',
+                    size: '01',
+                    name: '1GB',
                     price: '$7.50'
                   },
                   {
-                    size: '2GB',
+                    size: '03',
+                    name: '2GB',
                     price: '$15.00'
                   },
                   {
-                    size: '3GB',
-                    price: '$22.50'
+                    size: '07',
+                    name: '4GB',
+                    price: '$30.00'
                   }
                 ],
                 regions: [
@@ -231,10 +234,10 @@
               that.servers.push(data.data);
             });
           },
-          deleteServer: function(id){
+          deleteServer: function(index){
             var that = this;
-            axios.delete('/api/server/'+id).then(data => {
-              console.log(data.data);
+            axios.delete('/api/server/'+this.servers[index].id).then(data => {
+              that.servers.splice(index,1);
             });
           }
 
